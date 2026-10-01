@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ClassPrep Junior</string>
+    <string name="reminder_channel_name">Evening preparation reminder</string>
+    <string name="reminder_channel_description">An optional evening nudge to review tomorrow\'s school checklist.</string>
+    <string name="reminder_title">Prepare for tomorrow</string>
+    <string name="reminder_body">Your school checklist is ready to review.</string>
+</resources>
