@@ -95,15 +95,14 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
-// Fail any release packaging/signing task when credentials are missing.
+// Fail release packaging/signing when credentials are missing. Only the tasks that actually produce
+// signed artifacts are checked (exact names), so lintRelease and unit tests run without credentials.
+val signedReleaseTasks = setOf(
+    "packageRelease", "packageReleaseBundle", "signReleaseBundle", "assembleRelease", "bundleRelease",
+)
 gradle.taskGraph.whenReady {
-    val releaseTasks = allTasks.filter { t ->
-        t.project == project && (
-            t.name.startsWith("packageRelease") || t.name.startsWith("bundleRelease") ||
-                t.name.startsWith("signRelease") || t.name == "assembleRelease" || t.name.startsWith("validateSigningRelease")
-            )
-    }
-    if (releaseTasks.isNotEmpty() && !hasReleaseSigning) {
+    val wantsSigned = allTasks.any { it.project == project && it.name in signedReleaseTasks }
+    if (wantsSigned && !hasReleaseSigning) {
         throw GradleException(
             "Release signing credentials are missing. Provide ANDROID_KEYSTORE_PATH, ANDROID_KEYSTORE_PASSWORD, " +
                 "ANDROID_KEY_ALIAS and ANDROID_KEY_PASSWORD (or keystore.properties). Debug signing is never used for release."
